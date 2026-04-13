@@ -24,6 +24,7 @@ namespace Bookslo2026.Consola
                         Console.WriteLine("1. List Authors");
                         Console.WriteLine("2. Add Authors");
                         Console.WriteLine("3. Delete Authors");
+                        Console.WriteLine("4. Update Authors");
                         var optionAuthors = Console.ReadLine();
                         switch (optionAuthors)
                         {
@@ -35,6 +36,9 @@ namespace Bookslo2026.Consola
                                 break;
                             case "3":
                                 DeleteAuthor();
+                                break;
+                            case "4":
+                                UpdateAuthor();
                                 break;
                             case "0":
                                 return;
@@ -48,6 +52,11 @@ namespace Bookslo2026.Consola
                         break;
                 }
             } while (true);
+        }
+
+        private static void UpdateAuthor()
+        {
+            Console.Clear();
         }
 
         private static void DeleteAuthor()
