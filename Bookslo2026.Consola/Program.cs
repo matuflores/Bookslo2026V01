@@ -57,6 +57,53 @@ namespace Bookslo2026.Consola
         private static void UpdateAuthor()
         {
             Console.Clear();
+            Console.WriteLine("Update an Author");
+            ShowAuthor();
+            using (var context = new BooksDbContext())
+            {
+                Console.Write("Select an ID to update: ");
+
+                var authorId = int.Parse(Console.ReadLine()!);
+                var authorToUpdate = context.Authors.FirstOrDefault(a=>a.AuthorId==authorId);
+                if (authorToUpdate!=null)
+                {
+                    Console.WriteLine($"Author to Update: {authorToUpdate}"); 
+                    Console.WriteLine("New First Name (ENTER to keep the same):");
+                    var inputFirstName = Console.ReadLine();
+                    var newFirstName =! string.IsNullOrWhiteSpace(inputFirstName)?inputFirstName:authorToUpdate.FirstName;//si el usuario ingresa un valor diferente de null o whitespace se asigna ese valor, sino se mantiene el mismo valor que ya tiene el autor
+                    Console.WriteLine("New Last Name (ENTER to keep the same):");
+                    var inputLastName = Console.ReadLine();
+                    var newLastName = !string.IsNullOrWhiteSpace(inputLastName) ? inputLastName : authorToUpdate.LastName;
+
+                    Console.WriteLine("Confirm the changes (y/n)");
+                    var responde= Console.ReadLine();
+                    if (responde!.ToLower()=="y")
+                    {
+                        try
+                        {
+                            authorToUpdate.FirstName = newFirstName;
+                            authorToUpdate.LastName = newLastName;
+
+                            context.SaveChanges();
+                            Console.WriteLine("Author updated successfully!");
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Database error!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cancelled by user");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Author does not exist");
+                }
+                Console.WriteLine("Key to continue");
+                Console.ReadLine();
+            }
         }
 
         private static void DeleteAuthor()
