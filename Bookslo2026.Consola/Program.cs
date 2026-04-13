@@ -1,5 +1,6 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace Bookslo2026.Consola
@@ -138,7 +139,9 @@ namespace Bookslo2026.Consola
         {
             using (var context = new BooksDbContext())
             {
-                var authors = context.Authors.ToList();
+                var authors = context.Authors
+                    .AsNoTracking()
+                    .ToList();
                 foreach (var author in authors)
                 {//recordar para que me traiga el nombre y apelldo en la entidad usar el override del ToString
                     Console.WriteLine($"ID:{author.AuthorId} Author:{author}");
