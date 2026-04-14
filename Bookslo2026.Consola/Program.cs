@@ -9,6 +9,7 @@ namespace Bookslo2026.Consola
     {
         static void Main(string[] args)
         {
+            
             do
             {
                 Console.Clear();
