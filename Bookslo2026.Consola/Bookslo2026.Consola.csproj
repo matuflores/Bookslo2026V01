@@ -8,8 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bookslo2026.Data\Bookslo2026.Data.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Bookslo2026.Entities\Bookslo2026.Entities.csproj" />
+    <ProjectReference Include="..\Bookslo2026.Service\Bookslo2026.Service.csproj" />
   </ItemGroup>
 
 </Project>

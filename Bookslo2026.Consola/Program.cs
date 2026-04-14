@@ -1,5 +1,7 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Entities;
+using Bookslo2026.Service.Interfaces;
+using Bookslo2026.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
@@ -7,9 +9,11 @@ namespace Bookslo2026.Consola
 {
     internal class Program
     {
+        static IAuthorService _service = new AuthorService();
         static void Main(string[] args)
         {
             
+
             do
             {
                 Console.Clear();
@@ -60,51 +64,62 @@ namespace Bookslo2026.Consola
             Console.Clear();
             Console.WriteLine("Update an Author");
             ShowAuthor();
-            using (var context = new BooksDbContext())
+
+            //using (var context = new BooksDbContext())
+            //{
+            Console.Write("Select an ID to update: ");
+
+            var authorId = int.Parse(Console.ReadLine()!);
+
+            //var authorToUpdate = context.Authors.FirstOrDefault(a=>a.AuthorId==authorId);
+            var authorToUpdate = _service.GetById(authorId);
+            if (authorToUpdate!=null)
             {
-                Console.Write("Select an ID to update: ");
+                Console.WriteLine($"Author to Update: {authorToUpdate}"); 
+                Console.WriteLine("New First Name (ENTER to keep the same):");
+                var inputFirstName = Console.ReadLine();
+                var newFirstName =! string.IsNullOrWhiteSpace(inputFirstName)?inputFirstName:authorToUpdate.FirstName;//si el usuario ingresa un valor diferente de null o whitespace se asigna ese valor, sino se mantiene el mismo valor que ya tiene el autor
+                Console.WriteLine("New Last Name (ENTER to keep the same):");
+                var inputLastName = Console.ReadLine();
+                var newLastName = !string.IsNullOrWhiteSpace(inputLastName) ? inputLastName : authorToUpdate.LastName;
 
-                var authorId = int.Parse(Console.ReadLine()!);
-                var authorToUpdate = context.Authors.FirstOrDefault(a=>a.AuthorId==authorId);
-                if (authorToUpdate!=null)
+                Console.WriteLine("Confirm the changes (y/n)");
+                var responde= Console.ReadLine();
+                if (responde!.ToLower()=="y")
                 {
-                    Console.WriteLine($"Author to Update: {authorToUpdate}"); 
-                    Console.WriteLine("New First Name (ENTER to keep the same):");
-                    var inputFirstName = Console.ReadLine();
-                    var newFirstName =! string.IsNullOrWhiteSpace(inputFirstName)?inputFirstName:authorToUpdate.FirstName;//si el usuario ingresa un valor diferente de null o whitespace se asigna ese valor, sino se mantiene el mismo valor que ya tiene el autor
-                    Console.WriteLine("New Last Name (ENTER to keep the same):");
-                    var inputLastName = Console.ReadLine();
-                    var newLastName = !string.IsNullOrWhiteSpace(inputLastName) ? inputLastName : authorToUpdate.LastName;
-
-                    Console.WriteLine("Confirm the changes (y/n)");
-                    var responde= Console.ReadLine();
-                    if (responde!.ToLower()=="y")
+                    //try
+                    //{
+                    authorToUpdate.FirstName = newFirstName;
+                    authorToUpdate.LastName = newLastName;
+                    if (_service.Update(authorToUpdate))
                     {
-                        try
-                        {
-                            authorToUpdate.FirstName = newFirstName;
-                            authorToUpdate.LastName = newLastName;
-
-                            context.SaveChanges();
-                            Console.WriteLine("Author updated successfully!");
-                        }
-                        catch (Exception)
-                        {
-                            Console.WriteLine("Database error!");
-                        }
+                        Console.WriteLine("Author updated successfully!");
                     }
                     else
                     {
-                        Console.WriteLine("Cancelled by user");
+                        Console.WriteLine("Database error!");
                     }
+                        //
+                        //context.SaveChanges();
+                        
+                    //}
+                    //catch (Exception)
+                    //{
+                        //Console.WriteLine("Database error!");
+                    //}
                 }
                 else
                 {
-                    Console.WriteLine("Author does not exist");
+                    Console.WriteLine("Cancelled by user");
                 }
-                Console.WriteLine("Key to continue");
-                Console.ReadLine();
             }
+            else
+            {
+                Console.WriteLine("Author does not exist");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
+            //}
         }
 
         private static void DeleteAuthor()
@@ -113,40 +128,44 @@ namespace Bookslo2026.Consola
             Console.WriteLine("Delete an Author");
             Console.WriteLine("List of Available Authors");
             ShowAuthor();
-            using (var context = new BooksDbContext())
-            {                
-                Console.Write("Select an ID to delete: ");
-                var authorId=int.Parse(Console.ReadLine()!);//el ! es para decirle al compilador que no va a ser nulo, pero hay que tener cuidado porque si el usuario ingresa algo que no es un número va a lanzar una excepción, por eso se podría usar int.TryParse para manejar ese caso
-                var authorToDelete=context.Authors.Find(authorId);//uso find para buscar por la clave primaria, en este caso el AuthorId, podria haber usado FirstOrDefault pero find es más eficiente para buscar por clave primaria
-                if (authorToDelete != null)
+            //using (var context = new BooksDbContext())
+            //{                
+            Console.Write("Select an ID to delete: ");
+            var authorId = int.Parse(Console.ReadLine()!);//el ! es para decirle al compilador que no va a ser nulo, pero hay que tener cuidado porque si el usuario ingresa algo que no es un número va a lanzar una excepción, por eso se podría usar int.TryParse para manejar ese caso
+
+            //var authorToDelete=context.Authors.Find(authorId);//uso find para buscar por la clave primaria, en este caso el AuthorId, podria haber usado FirstOrDefault pero find es más eficiente para buscar por clave primaria
+            var authorToDelete = _service.GetById(authorId);
+            if (authorToDelete != null)
+            {
+                Console.Write($"¿Are you sure to delete {authorToDelete} (y/n)?");
+                var response = Console.ReadLine();
+                if (response!.ToLower()=="y")
                 {
-                    Console.Write($"¿Are you sure to delete {authorToDelete} (y/n)?");
-                    var response = Console.ReadLine();
-                    if (response!.ToLower()=="y")
+                    if (_service.Delete(authorToDelete.AuthorId))
+                    //try
                     {
-                        try
-                        {
-                            context.Authors.Remove(authorToDelete);
-                            context.SaveChanges();
-                            Console.WriteLine("Author deleted successfully!");
-                        }
-                        catch (Exception)
-                        {
-                            Console.WriteLine("Database error!");
-                        } 
+                    //    context.Authors.Remove(authorToDelete);
+                    //    context.SaveChanges();
+                        Console.WriteLine("Author deleted successfully!");
                     }
+                    //catch (Exception)
                     else
                     {
-                        Console.WriteLine("Deletion cancelled by user!");
-                    }
+                        Console.WriteLine("Database error!");
+                    } 
                 }
-                else 
-                { 
-                    Console.WriteLine("Author does not exist!");
+                else
+                {
+                    Console.WriteLine("Deletion cancelled by user!");
                 }
-                Console.WriteLine("Key to continue");
-                Console.ReadLine();
             }
+            else 
+            { 
+                Console.WriteLine("Author does not exist!");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
+            //}
         }
 
         private static void AddAuthor()
@@ -161,8 +180,6 @@ namespace Bookslo2026.Consola
             if(string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
             {
                 Console.WriteLine("First Name and Last Name are required.");
-                
-                return;
             }
             else
             {
@@ -171,12 +188,29 @@ namespace Bookslo2026.Consola
                     FirstName = firstName,
                     LastName = lastName,
                 };
-                using (var context = new BooksDbContext())
+
+                if (_service.Add(author))
                 {
-                    context.Authors.Add(author);
-                    context.SaveChanges();//persisto los cambios en la base de datos
+                    Console.WriteLine("Author added successfully!!");
                 }
-                Console.WriteLine("Author added successfully!!");
+                else//anulo lo de abajo porque empiezo a usar el servicio
+                { 
+                
+                //}
+                //try
+                //{
+                //    using (var context = new BooksDbContext())
+                //    {
+                //        context.Authors.Add(author);
+                //        context.SaveChanges();//persisto los cambios en la base de datos
+                //    }
+                //    Console.WriteLine("Author added successfully!!");
+                //}
+                //catch (Exception)
+                //{
+
+                    Console.WriteLine("Database error or author already exist!");
+                }
             }
 
             Console.WriteLine("Press Enter to continue...");
@@ -194,16 +228,19 @@ namespace Bookslo2026.Consola
 
         private static void ShowAuthor()
         {
-            using (var context = new BooksDbContext())
-            {
-                var authors = context.Authors
-                    .AsNoTracking()
-                    .ToList();
-                foreach (var author in authors)
-                {//recordar para que me traiga el nombre y apelldo en la entidad usar el override del ToString
-                    Console.WriteLine($"ID:{author.AuthorId} Author:{author}");
-                }
+            //todo esto lo saco porque empiezo a usar el servicio!!!
+            //using (var context = new BooksDbContext())
+            //{
+            //    var authors = context.Authors
+            //        .AsNoTracking()
+            //        .ToList();
+
+            var authors = _service.GetAll();
+            foreach (var author in authors)
+            {//recordar para que me traiga el nombre y apelldo en la entidad usar el override del ToString
+                Console.WriteLine($"ID:{author.AuthorId} Author:{author}");
             }
+            //}
         }
     }
 }
