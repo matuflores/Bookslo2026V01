@@ -202,30 +202,30 @@ namespace Bookslo2026.Consola
             Console.WriteLine("Last Name: ");
             var lastName = Console.ReadLine();
 
-            if(string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            //if(string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            //{
+            //    Console.WriteLine("First Name and Last Name are required.");
+            //}
+            //else
+            //{
+            var author = new Author
             {
-                Console.WriteLine("First Name and Last Name are required.");
+                FirstName = firstName!,
+                LastName = lastName!,
+            };
+
+            var result = _service.Add(author);
+            if (!result.Success)
+            {
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine(error);
+                }
             }
             else
             {
-                var author = new Author
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                };
-
-                var result = _service.Add(author);
-                if (!result.Success)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        Console.WriteLine(error);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Author added successfully!!");
-                }
+                Console.WriteLine("Author added successfully!!");
+            }
                 //if (_service.Add(author))
                 //{
                 //    Console.WriteLine("Author added successfully!!");
@@ -248,7 +248,7 @@ namespace Bookslo2026.Consola
 
                 //    Console.WriteLine("Database error or author already exist!");
                 //}
-            }
+            //}
 
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
