@@ -91,14 +91,27 @@ namespace Bookslo2026.Consola
                     //{
                     authorToUpdate.FirstName = newFirstName;
                     authorToUpdate.LastName = newLastName;
-                    if (_service.Update(authorToUpdate))
+                    
+                    var result = _service.Update(authorToUpdate);
+                    if (!result.Success)
                     {
-                        Console.WriteLine("Author updated successfully!");
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Database error!");
+                        Console.WriteLine("Author updated successfully!");
                     }
+                    //if (_service.Update(authorToUpdate))
+                    //{
+                    //    Console.WriteLine("Author updated successfully!");
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Database error!");
+                    //}
                         //
                         //context.SaveChanges();
                         
@@ -141,18 +154,30 @@ namespace Bookslo2026.Consola
                 var response = Console.ReadLine();
                 if (response!.ToLower()=="y")
                 {
-                    if (_service.Delete(authorToDelete.AuthorId))
-                    //try
+                    var result = _service.Delete(authorToDelete.AuthorId);
+                    if (!result.Success)
                     {
-                    //    context.Authors.Remove(authorToDelete);
-                    //    context.SaveChanges();
-                        Console.WriteLine("Author deleted successfully!");
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
                     }
-                    //catch (Exception)
                     else
                     {
-                        Console.WriteLine("Database error!");
-                    } 
+                        Console.WriteLine("Author deleted successfully!");
+                    }
+                    //if (_service.Delete(authorToDelete.AuthorId))
+                    ////try
+                    //{
+                    ////    context.Authors.Remove(authorToDelete);
+                    ////    context.SaveChanges();
+                    //    Console.WriteLine("Author deleted successfully!");
+                    //}
+                    ////catch (Exception)
+                    //else
+                    //{
+                    //    Console.WriteLine("Database error!");
+                    //} 
                 }
                 else
                 {
@@ -189,28 +214,40 @@ namespace Bookslo2026.Consola
                     LastName = lastName,
                 };
 
-                if (_service.Add(author))
+                var result = _service.Add(author);
+                if (!result.Success)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine(error);
+                    }
+                }
+                else
                 {
                     Console.WriteLine("Author added successfully!!");
                 }
-                else//anulo lo de abajo porque empiezo a usar el servicio
-                { 
-                
-                //}
-                //try
+                //if (_service.Add(author))
                 //{
-                //    using (var context = new BooksDbContext())
-                //    {
-                //        context.Authors.Add(author);
-                //        context.SaveChanges();//persisto los cambios en la base de datos
-                //    }
                 //    Console.WriteLine("Author added successfully!!");
                 //}
-                //catch (Exception)
-                //{
+                //else//anulo lo de abajo porque empiezo a usar el servicio
+                //{ 
+                
+                ////}
+                ////try
+                ////{
+                ////    using (var context = new BooksDbContext())
+                ////    {
+                ////        context.Authors.Add(author);
+                ////        context.SaveChanges();//persisto los cambios en la base de datos
+                ////    }
+                ////    Console.WriteLine("Author added successfully!!");
+                ////}
+                ////catch (Exception)
+                ////{
 
-                    Console.WriteLine("Database error or author already exist!");
-                }
+                //    Console.WriteLine("Database error or author already exist!");
+                //}
             }
 
             Console.WriteLine("Press Enter to continue...");

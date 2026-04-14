@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Bookslo2026.Data\Bookslo2026.Data.csproj" />
     <ProjectReference Include="..\Bookslo2026.Entities\Bookslo2026.Entities.csproj" />
   </ItemGroup>

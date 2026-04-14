@@ -9,8 +9,8 @@ namespace Bookslo2026.Service.Interfaces
     {
         List<Author> GetAll();
         Author? GetById(int id);
-        bool Add(Author author);
-        bool Update(Author author);
-        bool Delete(int id);
+        (bool Success, List<string> Errors) Add(Author author);
+        (bool Success, List<string> Errors) Update(Author author);
+        (bool Success, List<string> Errors) Delete(int id);
     }
 }
