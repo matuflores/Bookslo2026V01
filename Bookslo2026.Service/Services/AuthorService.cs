@@ -3,6 +3,7 @@ using Bookslo2026.Data.Repositories;
 using Bookslo2026.Entities;
 using Bookslo2026.Service.DTOs.Author;
 using Bookslo2026.Service.Interfaces;
+using Bookslo2026.Service.Mappers;
 using Bookslo2026.Service.Validators;
 
 namespace Bookslo2026.Service.Services
@@ -65,11 +66,9 @@ namespace Bookslo2026.Service.Services
         public List<AuthorListDto> GetAll()
         {
             return _repository.GetAll()
-                .Select(a => new AuthorListDto
-                {
-                    AuthorId = a.AuthorId,
-                    FullName = $"{a.FirstName} {a.LastName}"
-                }).ToList();//transformamos la lista de autores a una lista de AuthorListDto, que es lo que queremos mostrar al usuario
+                .Select(a => AuthorMapper
+                .ToAuthorListDto(a))
+                .ToList();//transformamos la lista de autores a una lista de AuthorListDto, que es lo que queremos mostrar al usuario
         }
 
         public AuthorDetailsDto? GetById(int id)
