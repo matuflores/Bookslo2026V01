@@ -1,12 +1,13 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Entities;
+using Bookslo2026.Service.DTOs.Author;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace Bookslo2026.Consola
-{
+{//VISTO TODA LA CLASE 002 (A,B Y C) SIGO POR LA CLASE003
     internal class Program
     {
         static IAuthorService _service = new AuthorService();
@@ -72,10 +73,10 @@ namespace Bookslo2026.Consola
             var authorId = int.Parse(Console.ReadLine()!);
 
             //var authorToUpdate = context.Authors.FirstOrDefault(a=>a.AuthorId==authorId);
-            var authorToUpdate = _service.GetById(authorId);
+            var authorToUpdate = _service.GetForUpdate(authorId);
             if (authorToUpdate!=null)
             {
-                Console.WriteLine($"Author to Update: {authorToUpdate}"); 
+                Console.WriteLine($"Author to Update: {authorToUpdate.FirstName} {authorToUpdate.LastName}"); 
                 Console.WriteLine("New First Name (ENTER to keep the same):");
                 var inputFirstName = Console.ReadLine();
                 var newFirstName =! string.IsNullOrWhiteSpace(inputFirstName)?inputFirstName:authorToUpdate.FirstName;//si el usuario ingresa un valor diferente de null o whitespace se asigna ese valor, sino se mantiene el mismo valor que ya tiene el autor
@@ -208,13 +209,13 @@ namespace Bookslo2026.Consola
             //}
             //else
             //{
-            var author = new Author
+            var authorDto = new AuthorCreateDto
             {
                 FirstName = firstName!,
                 LastName = lastName!,
             };
 
-            var result = _service.Add(author);
+            var result = _service.Add(authorDto);
             if (!result.Success)
             {
                 foreach (var error in result.Errors)
@@ -251,7 +252,7 @@ namespace Bookslo2026.Consola
             //}
 
             Console.WriteLine("Press Enter to continue...");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         private static void ListAuthors()
@@ -275,7 +276,7 @@ namespace Bookslo2026.Consola
             var authors = _service.GetAll();
             foreach (var author in authors)
             {//recordar para que me traiga el nombre y apelldo en la entidad usar el override del ToString
-                Console.WriteLine($"ID:{author.AuthorId} Author:{author}");
+                Console.WriteLine($"ID:{author.AuthorId,4} Author:{author.FullName,-30}");
             }
             //}
         }

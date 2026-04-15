@@ -9,6 +9,7 @@ namespace Bookslo2026.Data.Interfaces
     {
         List<Author> GetAll();
         Author? GetById(int id);
+        bool Exist(string FirstName, string LastName, int? authorId=null);
         void Delete(int id);
         void Update(Author author);
         void Add(Author author);

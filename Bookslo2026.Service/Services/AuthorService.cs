@@ -1,12 +1,9 @@
 ﻿using Bookslo2026.Data.Interfaces;
 using Bookslo2026.Data.Repositories;
 using Bookslo2026.Entities;
+using Bookslo2026.Service.DTOs.Author;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Validators;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bookslo2026.Service.Services
 {
@@ -17,31 +14,43 @@ namespace Bookslo2026.Service.Services
 
         public AuthorService()
         {
-            _repository=new AuthorRepository();
-            _validator = new AuthorValidator(); 
+            _repository = new AuthorRepository();
+            _validator = new AuthorValidator();
         }
-        public (bool Success, List<string>Errors) Add(Author author)
+        public (bool Success, List<string> Errors) Add(AuthorCreateDto authorDto)
         {
-            var result= _validator.Validate(author);
+            var author = new Author
+            {
+                FirstName = authorDto.FirstName,
+                LastName = authorDto.LastName,
+            };
+            var result = _validator.Validate(author);
             if (!result.IsValid)
             {
-                var errors=result.Errors.Select(e => e.ErrorMessage).ToList();
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
                 return (false, errors);
             }// SI LA VALIDACION NO FUE VALIDADA, DEVOLVEMOS LOS ERRORES DE VALIDACION AL USUARIO
-            try
+            if (!_repository.Exist(author.FirstName, author.LastName))
             {
-                _repository.Add(author);
-                return (true, new List<string>());
+                try
+                {
+                    _repository.Add(author);
+                    return (true, new List<string>());
+                }
+                catch (Exception)
+                {
+                    return (false, new List<string>() { "Database error!" });
+                }
             }
-            catch (Exception)
+            else
             {
-                return (false, new List<string>() { "Database error!" });
+                return (false, new List<string>() { "Author alredy exist!" });
             }
         }
 
         public (bool Success, List<string> Errors) Delete(int id)
         {
-            
+
             try
             {
                 _repository.Delete(id);
@@ -53,32 +62,71 @@ namespace Bookslo2026.Service.Services
             }
         }
 
-        public List<Author> GetAll()
+        public List<AuthorListDto> GetAll()
         {
-            return _repository.GetAll();
+            return _repository.GetAll()
+                .Select(a => new AuthorListDto
+                {
+                    AuthorId = a.AuthorId,
+                    FullName = $"{a.FirstName} {a.LastName}"
+                }).ToList();//transformamos la lista de autores a una lista de AuthorListDto, que es lo que queremos mostrar al usuario
         }
 
-        public Author? GetById(int id)
+        public AuthorDetailsDto? GetById(int id)
         {
-            return _repository.GetById(id);
+            var author = _repository.GetById(id);
+            if (author == null) return null;
+            return new AuthorDetailsDto
+            {
+                AuthorId = author.AuthorId,
+                FirstName = author.FirstName,
+                LastName = author.LastName
+            };
         }
 
-        public (bool Success, List<string> Errors) Update(Author author)
+        public AuthorUpdateDto? GetForUpdate(int id)
         {
+            var author = _repository.GetById(id);
+            if (author == null) return null;
+            return new AuthorUpdateDto
+            {
+                AuthorId = author.AuthorId,
+                FirstName = author.FirstName,
+                LastName = author.LastName
+            };
+
+        }
+
+        public (bool Success, List<string> Errors) Update(AuthorUpdateDto authorDto)
+        {
+            var author = new Author
+            {
+                AuthorId = authorDto.AuthorId,
+                FirstName = authorDto.FirstName,
+                LastName = authorDto.LastName
+            };
+
             var result = _validator.Validate(author);
             if (!result.IsValid)
             {
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
                 return (false, errors);
             }
-            try
+            if (!_repository.Exist(author.FirstName, author.LastName, author.AuthorId))
             {
-                _repository.Update(author);
-                return (true, new List<string>());
+                try
+                {
+                    _repository.Update(author);
+                    return (true, new List<string>());
+                }
+                catch (Exception)
+                {
+                    return (false, new List<string>() { "Database error!" });
+                }
             }
-            catch (Exception)
+            else
             {
-                return (false, new List<string>() { "Database error!" });
+                return (false, new List<string>() { "Author already exist!" });
             }
         }
     }

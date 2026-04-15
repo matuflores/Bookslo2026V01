@@ -29,6 +29,25 @@ namespace Bookslo2026.Data.Repositories
             }
         }
 
+        public bool Exist(string firstname, string lastname, int? authorId = null)
+        {
+            using (var context = new BooksDbContext())
+            {
+                Author? author;
+                if (authorId==null)
+                {
+                    author = context.Authors.FirstOrDefault(a =>
+                            a.FirstName == firstname && a.LastName == lastname); 
+                }
+                else
+                {
+                    author = context.Authors.FirstOrDefault(a =>
+                            a.FirstName == firstname && a.LastName == lastname && a.AuthorId != authorId);//esto lo pongo para que no me diga que existe el mismo autor cuando estoy editando un autor y no cambio su nombre, ya que el id del autor que estoy editando es igual al id del autor que ya existe
+                }
+                return author != null;
+            }
+        }
+
         public List<Author> GetAll()
         {
             using (var context = new BooksDbContext())
