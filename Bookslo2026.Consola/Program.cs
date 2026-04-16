@@ -1,70 +1,77 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Entities;
+using Bookslo2026.IoC;
 using Bookslo2026.Service.DTOs.Author;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Bookslo2026.Consola
 {
     internal class Program
     {
-        static IAuthorService _service = new AuthorService();
+        //static IAuthorService _service = new AuthorService();
+        static IServiceProvider provider=DependencyInyectionContainer.Configure();
         static void Main(string[] args)
         {
-            
 
-            do
+
+            using (var scoped=provider.CreateScope())
             {
-                Console.Clear();
-                Console.WriteLine("Library Manager"); 
-                Console.WriteLine("1. Authors");
-                Console.WriteLine("2. Books");
-                Console.WriteLine("0. Exit");
-                var option = Console.ReadLine();
-                switch (option)
+                var service = scoped.ServiceProvider.GetRequiredService<IAuthorService>();
+                do
                 {
-                    case "1":
-                        Console.WriteLine("Authors");
-                        Console.WriteLine("1. List Authors");
-                        Console.WriteLine("2. Add Authors");
-                        Console.WriteLine("3. Delete Authors");
-                        Console.WriteLine("4. Update Authors");
-                        var optionAuthors = Console.ReadLine();
-                        switch (optionAuthors)
-                        {
-                            case "1":
-                                ListAuthors();
-                                break;
-                            case "2":
-                                AddAuthor();
-                                break;
-                            case "3":
-                                DeleteAuthor();
-                                break;
-                            case "4":
-                                UpdateAuthor();
-                                break;
-                            case "0":
-                                return;
-                            default:
-                                break;
-                        }
-                        break;
-                    case "0":
-                        return;
-                    default:
-                        break;
-                }
-            } while (true);
+                    Console.Clear();
+                    Console.WriteLine("Library Manager");
+                    Console.WriteLine("1. Authors");
+                    Console.WriteLine("2. Books");
+                    Console.WriteLine("0. Exit");
+                    var option = Console.ReadLine();
+                    switch (option)
+                    {
+                        case "1":
+                            Console.WriteLine("Authors");
+                            Console.WriteLine("1. List Authors");
+                            Console.WriteLine("2. Add Authors");
+                            Console.WriteLine("3. Delete Authors");
+                            Console.WriteLine("4. Update Authors");
+                            var optionAuthors = Console.ReadLine();
+                            switch (optionAuthors)
+                            {
+                                case "1":
+                                    ListAuthors(service);
+                                    break;
+                                case "2":
+                                    AddAuthor(service);
+                                    break;
+                                case "3":
+                                    DeleteAuthor(service);
+                                    break;
+                                case "4":
+                                    UpdateAuthor(service);
+                                    break;
+                                case "0":
+                                    return;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case "0":
+                            return;
+                        default:
+                            break;
+                    }
+                } while (true); 
+            }
         }
 
-        private static void UpdateAuthor()
+        private static void UpdateAuthor(IAuthorService service)
         {
             Console.Clear();
             Console.WriteLine("Update an Author");
-            ShowAuthor();
+            ShowAuthor(service);
 
             //using (var context = new BooksDbContext())
             //{
@@ -73,7 +80,7 @@ namespace Bookslo2026.Consola
             var authorId = int.Parse(Console.ReadLine()!);
 
             //var authorToUpdate = context.Authors.FirstOrDefault(a=>a.AuthorId==authorId);
-            var authorToUpdate = _service.GetForUpdate(authorId);
+            var authorToUpdate = service.GetForUpdate(authorId);
             if (authorToUpdate!=null)
             {
                 Console.WriteLine($"Author to Update: {authorToUpdate.FirstName} {authorToUpdate.LastName}"); 
@@ -93,7 +100,7 @@ namespace Bookslo2026.Consola
                     authorToUpdate.FirstName = newFirstName;
                     authorToUpdate.LastName = newLastName;
                     
-                    var result = _service.Update(authorToUpdate);
+                    var result = service.Update(authorToUpdate);
                     if (!result.Success)
                     {
                         foreach (var error in result.Errors)
@@ -136,26 +143,26 @@ namespace Bookslo2026.Consola
             //}
         }
 
-        private static void DeleteAuthor()
+        private static void DeleteAuthor(IAuthorService service)
         {
             Console.Clear();
             Console.WriteLine("Delete an Author");
             Console.WriteLine("List of Available Authors");
-            ShowAuthor();
+            ShowAuthor(service);
             //using (var context = new BooksDbContext())
             //{                
             Console.Write("Select an ID to delete: ");
             var authorId = int.Parse(Console.ReadLine()!);//el ! es para decirle al compilador que no va a ser nulo, pero hay que tener cuidado porque si el usuario ingresa algo que no es un número va a lanzar una excepción, por eso se podría usar int.TryParse para manejar ese caso
 
             //var authorToDelete=context.Authors.Find(authorId);//uso find para buscar por la clave primaria, en este caso el AuthorId, podria haber usado FirstOrDefault pero find es más eficiente para buscar por clave primaria
-            var authorToDelete = _service.GetById(authorId);
+            var authorToDelete = service.GetById(authorId);
             if (authorToDelete != null)
             {
-                Console.Write($"¿Are you sure to delete {authorToDelete} (y/n)?");
+                Console.Write($"¿Are you sure to delete {authorToDelete.FirstName} {authorToDelete.LastName} (y/n)?");
                 var response = Console.ReadLine();
                 if (response!.ToLower()=="y")
                 {
-                    var result = _service.Delete(authorToDelete.AuthorId);
+                    var result = service.Delete(authorToDelete.AuthorId);
                     if (!result.Success)
                     {
                         foreach (var error in result.Errors)
@@ -194,7 +201,7 @@ namespace Bookslo2026.Consola
             //}
         }
 
-        private static void AddAuthor()
+        private static void AddAuthor(IAuthorService service)
         {
             Console.Clear();
             Console.WriteLine("Add a New Author");
@@ -215,7 +222,7 @@ namespace Bookslo2026.Consola
                 LastName = lastName!,
             };
 
-            var result = _service.Add(authorDto);
+            var result = service.Add(authorDto);
             if (!result.Success)
             {
                 foreach (var error in result.Errors)
@@ -255,16 +262,16 @@ namespace Bookslo2026.Consola
             Console.ReadKey();
         }
 
-        private static void ListAuthors()
+        private static void ListAuthors(IAuthorService service)
         {
             Console.Clear();
             Console.WriteLine("Authors List");
-            ShowAuthor();
+            ShowAuthor(service);
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
         }
 
-        private static void ShowAuthor()
+        private static void ShowAuthor(IAuthorService service)
         {
             //todo esto lo saco porque empiezo a usar el servicio!!!
             //using (var context = new BooksDbContext())
@@ -273,7 +280,7 @@ namespace Bookslo2026.Consola
             //        .AsNoTracking()
             //        .ToList();
 
-            var authors = _service.GetAll();
+            var authors = service.GetAll();
             foreach (var author in authors)
             {//recordar para que me traiga el nombre y apelldo en la entidad usar el override del ToString
                 Console.WriteLine($"ID:{author.AuthorId,4} Author:{author.FullName,-30}");

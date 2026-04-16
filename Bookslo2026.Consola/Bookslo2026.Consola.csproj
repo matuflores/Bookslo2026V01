@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bookslo2026.Entities\Bookslo2026.Entities.csproj" />
+    <ProjectReference Include="..\Bookslo2026.IoC\Bookslo2026.IoC.csproj" />
     <ProjectReference Include="..\Bookslo2026.Service\Bookslo2026.Service.csproj" />
   </ItemGroup>
 
