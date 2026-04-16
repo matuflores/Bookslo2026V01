@@ -20,11 +20,12 @@ namespace Bookslo2026.Service.Services
         }
         public (bool Success, List<string> Errors) Add(AuthorCreateDto authorDto)
         {
-            var author = new Author
-            {
-                FirstName = authorDto.FirstName,
-                LastName = authorDto.LastName,
-            };
+            //var author = new Author
+            //{
+            //    FirstName = authorDto.FirstName,
+            //    LastName = authorDto.LastName,
+            //};
+            var author = AuthorMapper.toEntity(authorDto);
             var result = _validator.Validate(author);
             if (!result.IsValid)
             {
@@ -75,35 +76,38 @@ namespace Bookslo2026.Service.Services
         {
             var author = _repository.GetById(id);
             if (author == null) return null;
-            return new AuthorDetailsDto
-            {
-                AuthorId = author.AuthorId,
-                FirstName = author.FirstName,
-                LastName = author.LastName
-            };
+            return AuthorMapper.ToAuthorDetailsDto(author);
+            //return new AuthorDetailsDto
+            //{
+            //    AuthorId = author.AuthorId,
+            //    FirstName = author.FirstName,
+            //    LastName = author.LastName
+            //};
         }
 
         public AuthorUpdateDto? GetForUpdate(int id)
         {
             var author = _repository.GetById(id);
             if (author == null) return null;
-            return new AuthorUpdateDto
-            {
-                AuthorId = author.AuthorId,
-                FirstName = author.FirstName,
-                LastName = author.LastName
-            };
+            //return new AuthorUpdateDto
+            //{
+            //    AuthorId = author.AuthorId,
+            //    FirstName = author.FirstName,
+            //    LastName = author.LastName
+            //};
+            return AuthorMapper.ToAuthorUpdateDto(author);
 
         }
 
         public (bool Success, List<string> Errors) Update(AuthorUpdateDto authorDto)
         {
-            var author = new Author
-            {
-                AuthorId = authorDto.AuthorId,
-                FirstName = authorDto.FirstName,
-                LastName = authorDto.LastName
-            };
+            var author = AuthorMapper.toEntity(authorDto);
+            //var author = new Author
+            //{
+            //    AuthorId = authorDto.AuthorId,
+            //    FirstName = authorDto.FirstName,
+            //    LastName = authorDto.LastName
+            //};
 
             var result = _validator.Validate(author);
             if (!result.IsValid)

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace Bookslo2026.Consola
-{//VISTO TODA LA CLASE 002 (A,B Y C) SIGO POR LA CLASE003
+{
     internal class Program
     {
         static IAuthorService _service = new AuthorService();
