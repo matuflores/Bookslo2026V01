@@ -20,14 +20,21 @@ namespace Bookslo2026.Data.Repositories
             _context.Publishers.Add(publisher);
         }
 
+        public void Delete(int id)
+        {
+            var publisher = _context.Publishers.Find(id);//GetById(id);
+            if (publisher == null) return;
+            _context.Publishers.Remove(publisher);
+        }
+
         public List<Publisher> GetAll()
         {
             return _context.Publishers.AsNoTracking().ToList();
         }
 
-        //public Publisher? GetById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Publisher? GetById(int id)
+        {
+            return _context.Publishers.Find(id);
+        }
     }
 }

@@ -29,5 +29,15 @@ namespace Bookslo2026.Service.Mappers
                 Email = publisherDto.Email
             };
         }
+
+        public static PublisherDetailsDto ToPublisherDetailsDto(Publisher publisher)
+        {
+            return new PublisherDetailsDto
+            {
+                PublisherId = publisher.PublisherId,
+                Name = publisher.Name,
+                Country = publisher.Country
+            };
+        }
     }
 }

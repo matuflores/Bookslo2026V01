@@ -66,6 +66,7 @@ namespace Bookslo2026.Consola
                             Console.WriteLine("Publishers");
                             Console.WriteLine("1. List Publishers");
                             Console.WriteLine("2. Add Publishers");
+                            Console.WriteLine("3. Delete Publishers");
                             var optionPublisher = Console.ReadLine();
                             switch (optionPublisher)
                             {
@@ -75,11 +76,11 @@ namespace Bookslo2026.Consola
                                 case "2":
                                     AddPublisher(servicePublisher);
                                     break;
-                                //case "3":
-                                //    DeletePublisher(service);
-                                //    break;
+                                case "3":
+                                    DeletePublisher(servicePublisher);
+                                    break;
                                 //case "4":
-                                //    UpdatePublisher(service);
+                                //    UpdatePublisher(servicePublishe);
                                 //    break;
                                 case "0":
                                     return;
@@ -94,6 +95,49 @@ namespace Bookslo2026.Consola
                     }
                 } while (true); 
             }
+        }
+
+        private static void DeletePublisher(IPublisherService servicePublisher)
+        {
+            Console.Clear();
+            Console.WriteLine("Delete an Publisher");
+            Console.WriteLine("List of Available Publisher");
+            ShowPublisher(servicePublisher);
+            
+            Console.Write("Select an ID to delete: ");
+            var publisherId = int.Parse(Console.ReadLine()!);
+
+            var publisherDelete = servicePublisher.GetById(publisherId);
+            if (publisherDelete != null)
+            {
+                Console.Write($"¿Are you sure to delete {publisherDelete.Name} the {publisherDelete.Country} (y/n)?");
+                var response = Console.ReadLine();
+                if (response!.ToLower() == "y")
+                {
+                    var result = servicePublisher.Delete(publisherDelete.PublisherId);
+                    if (!result.Success)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Publisher deleted successfully!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Deletion cancelled by user!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Publisher does not exist!");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
         }
 
         private static void AddPublisher(IPublisherService servicePublisher)
