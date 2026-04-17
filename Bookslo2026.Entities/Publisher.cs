@@ -17,5 +17,7 @@ namespace Bookslo2026.Entities
         {
             return $"{Name} - ({Country}) - Founded: {FoundedDate.ToShortDateString()} - {Email} - Active: {IsActive}";
         }
+
+        ICollection<Book> Books { get; set; } = null!;
     }
 }

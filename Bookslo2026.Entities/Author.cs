@@ -35,5 +35,7 @@ namespace Bookslo2026.Entities
         {
             return $"{FirstName} {LastName}";
         }
+
+        ICollection<Book> Books { get; set; } = null!;
     }
 }

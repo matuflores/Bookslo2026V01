@@ -14,6 +14,8 @@ namespace Bookslo2026.Data
         public DbSet<Author> Authors { get; set; }//agrego referencia de la tabla de author
         public DbSet<Publisher> Publishers { get; set; }
 
+        public DbSet<Book> Books { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=BooksIo2026; Trusted_Connection=true; TrustServerCertificate=true;");
