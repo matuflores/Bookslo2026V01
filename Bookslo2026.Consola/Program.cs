@@ -26,7 +26,8 @@ namespace Bookslo2026.Consola
                     Console.Clear();
                     Console.WriteLine("Library Manager");
                     Console.WriteLine("1. Authors");
-                    Console.WriteLine("2. Books");
+                    Console.WriteLine("2. Publishers");
+                    Console.WriteLine("3. Books");
                     Console.WriteLine("0. Exit");
                     var option = Console.ReadLine();
                     switch (option)
@@ -52,6 +53,30 @@ namespace Bookslo2026.Consola
                                 case "4":
                                     UpdateAuthor(service);
                                     break;
+                                case "0":
+                                    return;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case "2":
+                            Console.WriteLine("Authors");
+                            Console.WriteLine("1. List Authors");
+                            var optionPublisher = Console.ReadLine();
+                            switch (optionPublisher)
+                            {
+                                //case "1":
+                                //    ListPublisher();
+                                //    break;
+                                //case "2":
+                                //    AddPublisher(service);
+                                //    break;
+                                //case "3":
+                                //    DeletePublisher(service);
+                                //    break;
+                                //case "4":
+                                //    UpdatePublisher(service);
+                                //    break;
                                 case "0":
                                     return;
                                 default:

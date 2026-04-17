@@ -4,6 +4,7 @@ using Bookslo2026.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookslo2026.Data.Migrations
 {
     [DbContext(typeof(BooksDbContext))]
-    partial class BooksDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417024940_NuevosAtributosPublisher")]
+    partial class NuevosAtributosPublisher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,44 +80,6 @@ namespace Bookslo2026.Data.Migrations
                     b.HasKey("PublisherId");
 
                     b.ToTable("Publishers");
-
-                    b.HasData(
-                        new
-                        {
-                            PublisherId = 1,
-                            Country = "Argentina",
-                            Email = "contacto@ateneo.com",
-                            FoundedDate = new DateTime(1912, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Name = "Editorial Ateneo"
-                        },
-                        new
-                        {
-                            PublisherId = 2,
-                            Country = "España",
-                            Email = "info@planeta.es",
-                            FoundedDate = new DateTime(1949, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Name = "Planeta"
-                        },
-                        new
-                        {
-                            PublisherId = 3,
-                            Country = "México",
-                            Email = "ventas@sigloxxi.mx",
-                            FoundedDate = new DateTime(1965, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Name = "Siglo XXI"
-                        },
-                        new
-                        {
-                            PublisherId = 4,
-                            Country = "Argentina",
-                            Email = "admin@sudamericana.com.ar",
-                            FoundedDate = new DateTime(1939, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Name = "Sudamericana"
-                        });
                 });
 #pragma warning restore 612, 618
         }

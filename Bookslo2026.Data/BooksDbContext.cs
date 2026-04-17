@@ -12,6 +12,7 @@ namespace Bookslo2026.Data
     public class BooksDbContext : DbContext
     {
         public DbSet<Author> Authors { get; set; }//agrego referencia de la tabla de author
+        public DbSet<Publisher> Publishers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
