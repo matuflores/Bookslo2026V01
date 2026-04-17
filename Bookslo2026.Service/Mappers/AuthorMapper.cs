@@ -49,7 +49,7 @@ namespace Bookslo2026.Service.Mappers
             };
         }
 
-        public static Author toEntity(AuthorCreateDto authorDto)//este metodo es para convertir un AuthorCreateDto a un //Author, ya que el AuthorCreateDto es el que recibimos //del cliente y el Author es el que tenemos en la base de datos
+        public static Author toEntity(AuthorCreateDto authorDto)//este metodo es para convertir un AuthorCreateDto a un //Author, ya que el AuthorCreateDto es el que recibimos del cliente y el Author es el que tenemos en la base de datos
         {
             return new Author
             {

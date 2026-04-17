@@ -13,7 +13,8 @@ namespace Bookslo2026.Consola
     internal class Program
     {//hice hasta el servicio de publisher, es decir me quede en el punto 6 del ejercicio, tengo que desarrollar los servicios 
         //static IAuthorService _service = new AuthorService();
-        static IServiceProvider provider=DependencyInyectionContainer.Configure();
+        static IServiceProvider provider = DependencyInyectionContainer.Configure();
+        
         static void Main(string[] args)
         {
 
@@ -21,6 +22,7 @@ namespace Bookslo2026.Consola
             using (var scoped=provider.CreateScope())
             {
                 var service = scoped.ServiceProvider.GetRequiredService<IAuthorService>();
+                var servicePublisher = scoped.ServiceProvider.GetRequiredService<IPublisherService>();
                 do
                 {
                     Console.Clear();
@@ -60,14 +62,14 @@ namespace Bookslo2026.Consola
                             }
                             break;
                         case "2":
-                            Console.WriteLine("Authors");
-                            Console.WriteLine("1. List Authors");
+                            Console.WriteLine("Publishers");
+                            Console.WriteLine("1. List Publishers");
                             var optionPublisher = Console.ReadLine();
                             switch (optionPublisher)
                             {
-                                //case "1":
-                                //    ListPublisher();
-                                //    break;
+                                case "1":
+                                    ListPublisher(servicePublisher);
+                                    break;
                                 //case "2":
                                 //    AddPublisher(service);
                                 //    break;
@@ -89,6 +91,24 @@ namespace Bookslo2026.Consola
                             break;
                     }
                 } while (true); 
+            }
+        }
+
+        private static void ListPublisher(IPublisherService servicePublisher)
+        {
+            Console.Clear();
+            Console.WriteLine("Publishers List");
+            ShowPublisher(servicePublisher);
+            Console.WriteLine("Press any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void ShowPublisher(IPublisherService servicePublisher)
+        {
+            var publishers = servicePublisher.GetAll();
+            foreach (var publisher in publishers)
+            {
+                Console.WriteLine($"ID: {publisher.PublisherId} Publisher: {publisher.Name} Country: {publisher.Country}");
             }
         }
 

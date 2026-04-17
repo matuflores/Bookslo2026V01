@@ -8,7 +8,7 @@ namespace Bookslo2026.Data.Interfaces
     public interface IPublishersRepository
     {
         List<Publisher> GetAll();
-        Publisher? GetById(int id);
+        //Publisher? GetById(int id);
         //bool Exist(string FirstName, string LastName, int? authorId = null);
         //void Delete(int id);
         //void Update(Author author);

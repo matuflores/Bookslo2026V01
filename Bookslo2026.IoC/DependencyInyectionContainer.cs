@@ -24,6 +24,10 @@ namespace Bookslo2026.IoC
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IValidator<Author>, AuthorValidator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IPublishersRepository, PublisherRepository>();
+            services.AddScoped<IPublisherService, PublisherService>();
+
             return services.BuildServiceProvider();
         }
     }

@@ -20,9 +20,9 @@ namespace Bookslo2026.Data.Repositories
             return _context.Publishers.AsNoTracking().ToList();
         }
 
-        public Publisher? GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //public Publisher? GetById(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
