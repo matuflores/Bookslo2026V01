@@ -15,6 +15,11 @@ namespace Bookslo2026.Data.Repositories
             _context = context;
         }
 
+        public void Add(Publisher publisher)
+        {
+            _context.Publishers.Add(publisher);
+        }
+
         public List<Publisher> GetAll()
         {
             return _context.Publishers.AsNoTracking().ToList();

@@ -1,13 +1,8 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Data.Interfaces;
-using Bookslo2026.Entities;
 using Bookslo2026.Service.DTOs.Publisher;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Mappers;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Bookslo2026.Service.Services
 {
@@ -22,6 +17,24 @@ namespace Bookslo2026.Service.Services
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
+
+        public (bool Success, List<string> Errors) Add(PublisherCreateDto publisherDto)
+        {
+
+            var publisher = PublisherMapper.toEntity(publisherDto);
+            try
+            {
+                _repository.Add(publisher);
+                _unitOfWork.Save();
+                return (true, new List<string>());
+            }
+            catch (Exception)
+            {
+                return (false, new List<string>() { "Database error!" });
+            }
+
+        }
+
         public List<PublisherListDto> GetAll()
         {
             return _repository.GetAll()

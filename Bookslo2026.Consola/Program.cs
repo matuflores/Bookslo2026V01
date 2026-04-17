@@ -2,6 +2,7 @@
 using Bookslo2026.Entities;
 using Bookslo2026.IoC;
 using Bookslo2026.Service.DTOs.Author;
+using Bookslo2026.Service.DTOs.Publisher;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Services;
 using Microsoft.EntityFrameworkCore;
@@ -64,15 +65,16 @@ namespace Bookslo2026.Consola
                         case "2":
                             Console.WriteLine("Publishers");
                             Console.WriteLine("1. List Publishers");
+                            Console.WriteLine("2. Add Publishers");
                             var optionPublisher = Console.ReadLine();
                             switch (optionPublisher)
                             {
                                 case "1":
                                     ListPublisher(servicePublisher);
                                     break;
-                                //case "2":
-                                //    AddPublisher(service);
-                                //    break;
+                                case "2":
+                                    AddPublisher(servicePublisher);
+                                    break;
                                 //case "3":
                                 //    DeletePublisher(service);
                                 //    break;
@@ -92,6 +94,44 @@ namespace Bookslo2026.Consola
                     }
                 } while (true); 
             }
+        }
+
+        private static void AddPublisher(IPublisherService servicePublisher)
+        {
+            Console.Clear();
+            Console.WriteLine("Add a New Publisher");
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+            Console.WriteLine("Country: ");
+            var country = Console.ReadLine();
+            Console.WriteLine("FoundedDate (yyyy-mm-dd): ");
+            var foundedDate = DateTime.Parse(Console.ReadLine()!);
+            Console.WriteLine("Email: ");
+            var email = Console.ReadLine();
+
+            var publisherDto = new PublisherCreateDto
+            {
+                Name = name!,
+                Country = country!,
+                FoundedDate = foundedDate,
+                Email = email!
+            };
+
+
+            var result = servicePublisher.Add(publisherDto);
+            if (!result.Success)
+            {
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine(error);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Publisher added successfully!!");
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
         }
 
         private static void ListPublisher(IPublisherService servicePublisher)

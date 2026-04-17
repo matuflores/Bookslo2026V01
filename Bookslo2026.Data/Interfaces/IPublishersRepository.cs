@@ -12,6 +12,6 @@ namespace Bookslo2026.Data.Interfaces
         //bool Exist(string FirstName, string LastName, int? authorId = null);
         //void Delete(int id);
         //void Update(Author author);
-        //void Add(Author author);
+        void Add(Publisher publisher);
     }
 }

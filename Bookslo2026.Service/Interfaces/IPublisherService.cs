@@ -9,5 +9,6 @@ namespace Bookslo2026.Service.Interfaces
     public interface IPublisherService
     {
         List<PublisherListDto> GetAll();
+        (bool Success, List<string> Errors) Add(PublisherCreateDto publisher);
     }
 }

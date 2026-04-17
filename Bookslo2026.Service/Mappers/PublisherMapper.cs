@@ -18,5 +18,16 @@ namespace Bookslo2026.Service.Mappers
                 Country= publisher.Country,
             };
         }
+
+        public static Publisher toEntity(PublisherCreateDto publisherDto)
+        {
+            return new Publisher
+            {
+                Name = publisherDto.Name,
+                Country = publisherDto.Country,
+                FoundedDate = publisherDto.FoundedDate,
+                Email = publisherDto.Email
+            };
+        }
     }
 }
