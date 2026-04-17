@@ -39,5 +39,29 @@ namespace Bookslo2026.Service.Mappers
                 Country = publisher.Country
             };
         }
+
+        public static PublisherUpdateDto ToPublisherUpdateDto(Publisher publisher)
+        {
+            return new PublisherUpdateDto
+            {
+                PublisherId = publisher.PublisherId,
+                Name = publisher.Name,
+                Country = publisher.Country,
+                FoundedDate= publisher.FoundedDate,
+                Email = publisher.Email
+            };
+        }
+
+        public static Publisher toEntity(PublisherUpdateDto publisherDto)
+        {
+            return new Publisher
+            {
+                PublisherId = publisherDto.PublisherId,
+                Name = publisherDto.Name,
+                Country = publisherDto.Country,
+                FoundedDate = publisherDto.FoundedDate,
+                Email = publisherDto.Email
+            };
+        }
     }
 }

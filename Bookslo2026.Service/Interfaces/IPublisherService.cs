@@ -12,5 +12,9 @@ namespace Bookslo2026.Service.Interfaces
         (bool Success, List<string> Errors) Add(PublisherCreateDto publisher);
         (bool Success, List<string> Errors) Delete(int id);
         PublisherDetailsDto? GetById(int id);
+
+        PublisherUpdateDto? GetForUpdate(int id);
+        
+        (bool Success, List<string> Errors) Update(PublisherUpdateDto publisher);
     }
 }

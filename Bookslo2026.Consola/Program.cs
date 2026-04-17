@@ -67,6 +67,7 @@ namespace Bookslo2026.Consola
                             Console.WriteLine("1. List Publishers");
                             Console.WriteLine("2. Add Publishers");
                             Console.WriteLine("3. Delete Publishers");
+                            Console.WriteLine("4. Update Publishers");
                             var optionPublisher = Console.ReadLine();
                             switch (optionPublisher)
                             {
@@ -79,9 +80,9 @@ namespace Bookslo2026.Consola
                                 case "3":
                                     DeletePublisher(servicePublisher);
                                     break;
-                                //case "4":
-                                //    UpdatePublisher(servicePublishe);
-                                //    break;
+                                case "4":
+                                    UpdatePublisher(servicePublisher);
+                                    break;
                                 case "0":
                                     return;
                                 default:
@@ -95,6 +96,69 @@ namespace Bookslo2026.Consola
                     }
                 } while (true); 
             }
+        }
+
+        private static void UpdatePublisher(IPublisherService servicePublisher)
+        {
+            Console.Clear();
+            Console.WriteLine("Update an Publisher");
+            ShowPublisher(servicePublisher);
+
+            Console.Write("Select an ID to update: ");
+
+            var publisherId = int.Parse(Console.ReadLine()!);
+
+            var publisherToUpdate = servicePublisher.GetForUpdate(publisherId);
+            if (publisherToUpdate != null)
+            {
+                Console.WriteLine($"Publisher to Update: {publisherToUpdate.Name}, {publisherToUpdate.Country}, {publisherToUpdate.FoundedDate}, {publisherToUpdate.Email}");
+                Console.WriteLine("Name: ");
+                var inputName = Console.ReadLine();
+                var newName = !string.IsNullOrWhiteSpace(inputName) ? inputName : publisherToUpdate.Name;
+                Console.WriteLine("Country: ");
+                var inputCountry = Console.ReadLine();
+                var newCountry = !string.IsNullOrWhiteSpace(inputCountry) ? inputCountry : publisherToUpdate.Country;
+                Console.WriteLine("FoundedDate (yyyy-mm-dd): ");
+                var inputFoundedDate = DateTime.Parse(Console.ReadLine()!);
+                var newFoundedDate = inputFoundedDate != default ? inputFoundedDate : publisherToUpdate.FoundedDate;
+                Console.WriteLine("Email: ");
+                var inputEmail = Console.ReadLine();
+                var newEmail = !string.IsNullOrWhiteSpace(inputEmail) ? inputEmail : publisherToUpdate.Email;
+
+
+                Console.WriteLine("Confirm the changes (y/n)");
+                var responde = Console.ReadLine();
+                if (responde!.ToLower() == "y")
+                {
+                    publisherToUpdate.Name = newName;
+                    publisherToUpdate.Country = newCountry;
+                    publisherToUpdate.FoundedDate = newFoundedDate;
+                    publisherToUpdate.Email = newEmail;
+
+                    var result = servicePublisher.Update(publisherToUpdate);
+                    if (!result.Success)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Publisher updated successfully!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cancelled by user");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Publisher does not exist");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
         }
 
         private static void DeletePublisher(IPublisherService servicePublisher)

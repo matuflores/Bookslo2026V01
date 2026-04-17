@@ -9,9 +9,9 @@ namespace Bookslo2026.Data.Interfaces
     {
         List<Publisher> GetAll();
         Publisher? GetById(int id);
-        //bool Exist(string FirstName, string LastName, int? authorId = null);
+        bool Exist(string Name, string Country, string mail, int? publisherId = null);
         void Delete(int id);
-        //void Update(Author author);
+        void Update(Publisher publisher);
         void Add(Publisher publisher);
     }
 }

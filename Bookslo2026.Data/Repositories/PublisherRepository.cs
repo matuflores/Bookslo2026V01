@@ -27,6 +27,22 @@ namespace Bookslo2026.Data.Repositories
             _context.Publishers.Remove(publisher);
         }
 
+        public bool Exist(string name, string country, string mail, int? publisherId = null)
+        {
+            Publisher? publisher;
+            if (publisherId == null)
+            {
+                publisher = _context.Publishers.FirstOrDefault(p =>
+                p.Name == name && p.Country == country && p.Email==mail);
+            }
+            else 
+            { 
+                publisher = _context.Publishers.FirstOrDefault(p=>
+                p.Name == name && p.Country == country && p.Email == mail && p.PublisherId!=publisherId);
+            }
+            return publisher != null;
+        }
+
         public List<Publisher> GetAll()
         {
             return _context.Publishers.AsNoTracking().ToList();
@@ -35,6 +51,11 @@ namespace Bookslo2026.Data.Repositories
         public Publisher? GetById(int id)
         {
             return _context.Publishers.Find(id);
+        }
+
+        public void Update(Publisher publisher)
+        {
+            _context.Publishers.Update(publisher);
         }
     }
 }
