@@ -1,6 +1,7 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Data.Interfaces;
 using Bookslo2026.Service.DTOs.Book;
+using Bookslo2026.Service.DTOs.Publisher;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Mappers;
 using System;
@@ -19,6 +20,22 @@ namespace Bookslo2026.Service.Services
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
+
+        public (bool Success, List<string> Errors) Add(BookCreateDto bookDto)
+        {
+            var book = BookMapper.toEntity(bookDto);
+            try
+            {
+                _repository.Add(book);
+                _unitOfWork.Save();
+                return (true, new List<string>());
+            }
+            catch (Exception)
+            {
+                return (false, new List<string>() { "Database error!" });
+            }
+        }
+
         public List<BookListDto> GetAll()
         {
             return _repository.GetAll()

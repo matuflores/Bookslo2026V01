@@ -16,7 +16,7 @@ namespace Bookslo2026.Data.Repositories
         }
         public void Add(Book book)
         {
-            throw new NotImplementedException();
+            _context.Books.Add(book);
         }
 
         public void Delete(int id)

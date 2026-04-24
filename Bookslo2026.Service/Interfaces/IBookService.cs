@@ -9,7 +9,7 @@ namespace Bookslo2026.Service.Interfaces
     public interface IBookService
     {
         List<BookListDto> GetAll();
-        //List<PublisherListDto> GetAll();
+        (bool Success, List<string> Errors) Add(BookCreateDto book);
         //(bool Success, List<string> Errors) Add(PublisherCreateDto publisher);
         //(bool Success, List<string> Errors) Delete(int id);
         //PublisherDetailsDto? GetById(int id);

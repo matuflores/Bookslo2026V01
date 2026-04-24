@@ -21,5 +21,17 @@ namespace Bookslo2026.Service.Mappers
                 Price = book.Price
             };
         }
+
+        public static Book toEntity(BookCreateDto bookDto)
+        {
+            return new Book
+            {
+                Title = bookDto.Title,
+                AuthorId = bookDto.AuthorId,
+                PublisherId = bookDto.PublisherId,
+                PublishedDate = bookDto.PublishedDate,
+                Price = bookDto.Price
+            };
+        }
     }
 }

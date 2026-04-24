@@ -2,6 +2,7 @@
 using Bookslo2026.Entities;
 using Bookslo2026.IoC;
 using Bookslo2026.Service.DTOs.Author;
+using Bookslo2026.Service.DTOs.Book;
 using Bookslo2026.Service.DTOs.Publisher;
 using Bookslo2026.Service.Interfaces;
 using Bookslo2026.Service.Services;
@@ -103,7 +104,7 @@ namespace Bookslo2026.Consola
                                     ListBooks(serviceBook);
                                     break;
                                 case "2":
-                                    //AddBook(serviceBook);
+                                    AddBook(serviceBook);
                                     break;
                                 case "3":
                                     //DeleteBook(serviceBook);
@@ -125,6 +126,46 @@ namespace Bookslo2026.Consola
                     break;
                 } while (true);
             }
+        }
+
+        private static void AddBook(IBookService serviceBook)
+        {
+            Console.Clear();
+            Console.WriteLine("Add a New Book");
+            Console.WriteLine("Title: ");
+            var title = Console.ReadLine();
+            Console.WriteLine("Author ID: ");
+            var authorId = int.Parse(Console.ReadLine()!);
+            Console.WriteLine("Publisher ID: ");
+            var publisherId = int.Parse(Console.ReadLine()!);
+            Console.WriteLine("Published Date (yyyy-mm-dd): ");
+            var publishedDate = DateTime.Parse(Console.ReadLine()!);
+            Console.WriteLine("Price: ");
+            var price = decimal.Parse(Console.ReadLine()!);
+
+            var bookDto = new BookCreateDto
+            {
+                Title = title!,
+                AuthorId = authorId,
+                PublisherId = publisherId,
+                PublishedDate = publishedDate,
+                Price = price
+            };
+
+            var result = serviceBook.Add(bookDto);
+            if (!result.Success)
+            {
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine(error);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book added successfully!!");
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
         }
 
         private static void ListBooks(IBookService serviceBook)
