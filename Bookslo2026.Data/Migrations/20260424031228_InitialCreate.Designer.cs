@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookslo2026.Data.Migrations
 {
     [DbContext(typeof(BooksDbContext))]
-    [Migration("20260417221418_AgregarTablaBooks")]
-    partial class AgregarTablaBooks
+    [Migration("20260424031228_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,32 @@ namespace Bookslo2026.Data.Migrations
                         .HasDatabaseName("IX_Authors_FirstName_LastName");
 
                     b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorId = 1,
+                            FirstName = "Isaac",
+                            LastName = "Asimov"
+                        },
+                        new
+                        {
+                            AuthorId = 2,
+                            FirstName = "J.K.",
+                            LastName = "Rowling"
+                        },
+                        new
+                        {
+                            AuthorId = 3,
+                            FirstName = "George",
+                            LastName = "Orwell"
+                        },
+                        new
+                        {
+                            AuthorId = 4,
+                            FirstName = "Jane",
+                            LastName = "Austen"
+                        });
                 });
 
             modelBuilder.Entity("Bookslo2026.Entities.Book", b =>
@@ -67,7 +93,7 @@ namespace Bookslo2026.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("PublishedDate")
                         .HasColumnType("datetime2");
@@ -77,7 +103,8 @@ namespace Bookslo2026.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("BookId");
 
@@ -85,7 +112,64 @@ namespace Bookslo2026.Data.Migrations
 
                     b.HasIndex("PublisherId");
 
+                    b.HasIndex("Title");
+
+                    b.HasIndex("Title", "AuthorId")
+                        .IsUnique();
+
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            AuthorId = 1,
+                            IsActive = true,
+                            Price = 15000m,
+                            PublishedDate = new DateTime(1951, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherId = 1,
+                            Title = "Foundation"
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            AuthorId = 2,
+                            IsActive = true,
+                            Price = 18000m,
+                            PublishedDate = new DateTime(1965, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherId = 2,
+                            Title = "Dune"
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            AuthorId = 3,
+                            IsActive = true,
+                            Price = 17000m,
+                            PublishedDate = new DateTime(1968, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherId = 3,
+                            Title = "2001: A Space Odyssey"
+                        },
+                        new
+                        {
+                            BookId = 4,
+                            AuthorId = 4,
+                            IsActive = true,
+                            Price = 16000m,
+                            PublishedDate = new DateTime(1968, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherId = 4,
+                            Title = "Do Androids Dream of Electric Sheep?"
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            AuthorId = 1,
+                            IsActive = true,
+                            Price = 14000m,
+                            PublishedDate = new DateTime(1953, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherId = 1,
+                            Title = "Fahrenheit 451"
+                        });
                 });
 
             modelBuilder.Entity("Bookslo2026.Entities.Publisher", b =>
@@ -159,20 +243,30 @@ namespace Bookslo2026.Data.Migrations
             modelBuilder.Entity("Bookslo2026.Entities.Book", b =>
                 {
                     b.HasOne("Bookslo2026.Entities.Author", "Author")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Bookslo2026.Entities.Publisher", "Publisher")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Author");
 
                     b.Navigation("Publisher");
+                });
+
+            modelBuilder.Entity("Bookslo2026.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Bookslo2026.Entities.Publisher", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

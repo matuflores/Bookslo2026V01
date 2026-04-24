@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Bookslo2026.Entities
+﻿namespace Bookslo2026.Entities
 {
     public class Publisher
     {
@@ -18,6 +14,6 @@ namespace Bookslo2026.Entities
             return $"{Name} - ({Country}) - Founded: {FoundedDate.ToShortDateString()} - {Email} - Active: {IsActive}";
         }
 
-        ICollection<Book> Books { get; set; } = null!;
+        public ICollection<Book> Books { get; set; } = null!;
     }
 }

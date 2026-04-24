@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-namespace Bookslo2026.Entities
+﻿namespace Bookslo2026.Entities
 {
     //[Index(nameof(FirstName),nameof(LastName),IsUnique =true,Name ="IX_Authors_FirstName_LastName")]//con esta anotación se crea un índice único en la base de datos para los campos FirstName y LastName, lo que garantiza que no se puedan insertar autores con el mismo nombre completo
     //public class Author
@@ -36,6 +33,6 @@ namespace Bookslo2026.Entities
             return $"{FirstName} {LastName}";
         }
 
-        ICollection<Book> Books { get; set; } = null!;
+        public ICollection<Book> Books { get; set; } = null!;
     }
 }
