@@ -21,7 +21,9 @@ namespace Bookslo2026.Data.Repositories
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var book = _context.Books.Find(id);
+            if (book == null) return;
+            _context.Books.Remove(book);
         }
 
         public bool Exist(string Title, int? bookid = null)
@@ -36,7 +38,7 @@ namespace Bookslo2026.Data.Repositories
 
         public Book? GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Books.Find(id);
         }
 
         public void Update(Book book)

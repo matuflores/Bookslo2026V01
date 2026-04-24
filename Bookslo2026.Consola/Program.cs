@@ -107,7 +107,7 @@ namespace Bookslo2026.Consola
                                     AddBook(serviceBook);
                                     break;
                                 case "3":
-                                    //DeleteBook(serviceBook);
+                                    DeleteBook(serviceBook);
                                     break;
                                 case "4":
                                     //UpdateBook(serviceBook);
@@ -126,6 +126,50 @@ namespace Bookslo2026.Consola
                     break;
                 } while (true);
             }
+        }
+
+        private static void DeleteBook(IBookService serviceBook)
+        {
+            Console.Clear();
+            Console.WriteLine("Delete a Book");
+            Console.WriteLine("List of Available Books");
+            ShowBook(serviceBook);
+
+            Console.WriteLine("Select an ID to delete: ");
+            var bookId = int.Parse(Console.ReadLine()!);
+
+            var bookDelete = serviceBook.GetById(bookId);
+            if (bookDelete != null)
+            {
+                Console.WriteLine($"¿Are you sure to delete the book: {bookDelete.Title}, " +
+                    $"the Author: {bookDelete.AuthorId}, the Publisher: {bookDelete.PublisherId} (y/n)?");
+                var response = Console.ReadLine();
+                if (response !.ToLower()=="y")
+                {
+                    var result = serviceBook.Delete(bookDelete.BookId);
+                    if (!result.Success)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Book deleted successfully!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Deletion cancelled by user!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book does not exist!");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
         }
 
         private static void AddBook(IBookService serviceBook)

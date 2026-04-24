@@ -36,12 +36,33 @@ namespace Bookslo2026.Service.Services
             }
         }
 
+        public (bool Success, List<string> Errors) Delete(int id)
+        {
+            try
+            {
+                _repository.Delete(id);
+                _unitOfWork.Save();
+                return (true, new List<string>());
+            }
+            catch (Exception)
+            {
+                return (false, new List<string>() { "Database error!" });
+            }
+        }
+
         public List<BookListDto> GetAll()
         {
             return _repository.GetAll()
                 .Select(b => BookMapper
                 .ToBookListDto(b))
                 .ToList();
+        }
+
+        public BookDetailsDto? GetById(int id)
+        {
+            var book = _repository.GetById(id);
+            if (book == null) return null;
+            return BookMapper.ToBookDetailsDto(book);
         }
     }
 }
