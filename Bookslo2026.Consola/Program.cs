@@ -110,7 +110,7 @@ namespace Bookslo2026.Consola
                                     DeleteBook(serviceBook);
                                     break;
                                 case "4":
-                                    //UpdateBook(serviceBook);
+                                    UpdateBook(serviceBook);
                                     break;
 
                                 case "0":
@@ -126,6 +126,73 @@ namespace Bookslo2026.Consola
                     break;
                 } while (true);
             }
+        }
+
+        private static void UpdateBook(IBookService serviceBook)
+        {
+            Console.Clear();
+            Console.WriteLine("Update a Book");
+            ShowBook(serviceBook);
+
+            Console.Write("Select an ID to update: ");
+
+            var bookId = int.Parse(Console.ReadLine()!);
+
+
+            var bookToUpdate = serviceBook.GetForUpdate(bookId);
+            if (bookToUpdate != null)
+            {
+                Console.WriteLine($"Book to Update: {bookToUpdate.Title}, {bookToUpdate.AuthorId}, {bookToUpdate.PublisherId}, {bookToUpdate.PublishedDate}, {bookToUpdate.Price}");
+                Console.WriteLine("Title: ");
+                var inputTitle = Console.ReadLine();
+                var newTitle=!string.IsNullOrWhiteSpace(inputTitle) ? inputTitle : bookToUpdate.Title;
+                Console.WriteLine("Author ID: ");
+                var inputAuthorId = Console.ReadLine();
+                var newAuthorId = !string.IsNullOrWhiteSpace(inputAuthorId) ? int.Parse(inputAuthorId) : bookToUpdate.AuthorId;
+                Console.WriteLine("Publisher ID: ");
+                var inputPublisherId = Console.ReadLine();
+                var newPublisherId = !string.IsNullOrWhiteSpace(inputPublisherId) ? int.Parse(inputPublisherId) : bookToUpdate.PublisherId;
+                Console.WriteLine("Published Date (yyyy-mm-dd): ");
+                var inputPublishedDate = DateTime.Parse(Console.ReadLine()!);
+                var newPublishedDate = inputPublishedDate != default ? inputPublishedDate : bookToUpdate.PublishedDate;
+                Console.WriteLine("Price: ");
+                var inputPrice = Console.ReadLine();
+                var newPrice = !string.IsNullOrWhiteSpace(inputPrice) ? decimal.Parse(inputPrice) : bookToUpdate.Price;
+
+                Console.WriteLine("Confirm the changes (y/n): ");
+                var responde = Console.ReadLine();
+                if (responde !.ToLower()=="y")
+                {
+                    bookToUpdate.Title = newTitle;
+                    bookToUpdate.AuthorId = newAuthorId;
+                    bookToUpdate.PublisherId = newPublisherId;
+                    bookToUpdate.PublishedDate = newPublishedDate;
+                    bookToUpdate.Price = newPrice;
+
+                    var result = serviceBook.Update(bookToUpdate);
+                    if (!result.Success)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine(error);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Book updated successfully!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cancelled by user");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book does not exist");
+            }
+            Console.WriteLine("Key to continue");
+            Console.ReadLine();
         }
 
         private static void DeleteBook(IBookService serviceBook)

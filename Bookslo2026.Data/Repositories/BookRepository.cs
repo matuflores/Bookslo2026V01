@@ -3,6 +3,7 @@ using Bookslo2026.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace Bookslo2026.Data.Repositories
@@ -26,9 +27,20 @@ namespace Bookslo2026.Data.Repositories
             _context.Books.Remove(book);
         }
 
-        public bool Exist(string Title, int? bookid = null)
+        public bool Exist(string Title, int authorId, int publisherId, decimal Price, int? bookId = null)
         {
-            throw new NotImplementedException();
+            Book? book;
+            if (bookId == null)
+            {
+                book = _context.Books.FirstOrDefault(b =>
+                b.Title == Title && b.AuthorId == authorId && b.PublisherId == publisherId && b.Price == Price);
+            }
+            else
+            {
+                book = _context.Books.FirstOrDefault(b =>
+                b.Title == Title && b.AuthorId == authorId && b.PublisherId == publisherId && b.Price == Price && b.BookId != bookId);
+            }
+            return book != null;
         }
 
         public List<Book> GetAll()
@@ -43,7 +55,7 @@ namespace Bookslo2026.Data.Repositories
 
         public void Update(Book book)
         {
-            throw new NotImplementedException();
+            _context.Books.Update(book);
         }
     }
 }

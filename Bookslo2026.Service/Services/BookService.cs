@@ -1,5 +1,6 @@
 ﻿using Bookslo2026.Data;
 using Bookslo2026.Data.Interfaces;
+using Bookslo2026.Entities;
 using Bookslo2026.Service.DTOs.Book;
 using Bookslo2026.Service.DTOs.Publisher;
 using Bookslo2026.Service.Interfaces;
@@ -63,6 +64,44 @@ namespace Bookslo2026.Service.Services
             var book = _repository.GetById(id);
             if (book == null) return null;
             return BookMapper.ToBookDetailsDto(book);
+        }
+
+        public BookUpdateDto? GetForUpdate(int id)
+        {
+            var book = _repository.GetById(id);
+            if (book == null) return null;
+            return BookMapper.ToBookUpdateDto(book);
+        }
+
+        public (bool Success, List<string> Errors) Update(BookUpdateDto bookDto)
+        {
+            Book? book = _repository.GetById(bookDto.BookId);
+            if (book == null)
+            {
+                    return (false, new List<string>() { "Book Not Found!" });
+            }
+            book.Title = bookDto.Title;
+            book.AuthorId = bookDto.AuthorId;
+            book.PublisherId = bookDto.PublisherId;
+            book.PublishedDate = bookDto.PublishedDate;
+            book.Price = bookDto.Price;
+            
+            if (!_repository.Exist(book.Title, book.AuthorId, book.PublisherId, book.BookId))
+            {
+                try
+                {
+                    _unitOfWork.Save();
+                    return (true, new List<string>());
+                }
+                catch (Exception)
+                {
+                    return (false, new List<string>() { "Database error!" });
+                }
+            }
+            else
+            {
+                return (false, new List<string>() { "Book already exist!" });
+            }
         }
     }
 }

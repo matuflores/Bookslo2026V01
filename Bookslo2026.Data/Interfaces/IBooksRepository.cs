@@ -9,7 +9,7 @@ namespace Bookslo2026.Data.Interfaces
     {
         List<Book> GetAll();
         Book? GetById(int id);
-        bool Exist(string Title,int? bookid = null);
+        bool Exist(string Title,int authorId, int publisherId,decimal Price,int? bookId = null);
         void Delete(int id);
         void Update(Book book);
         void Add(Book book);
