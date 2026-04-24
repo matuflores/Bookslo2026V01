@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Bookslo2026.Entities
 {
@@ -21,5 +23,10 @@ namespace Bookslo2026.Entities
         public decimal Price { get; set; }
 
         public bool IsActive { get; set; }
+
+        public override string ToString()
+        {
+            return $"{BookId} - ({Title}) - ({AuthorId}) - ({PublisherId}) - {PublishedDate.ToShortDateString()} - ({Price})";
+        }
     }
 }

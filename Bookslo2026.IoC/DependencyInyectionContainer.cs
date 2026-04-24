@@ -28,6 +28,9 @@ namespace Bookslo2026.IoC
             services.AddScoped<IPublishersRepository, PublisherRepository>();
             services.AddScoped<IPublisherService, PublisherService>();
 
+            services.AddScoped<IBooksRepository, BookRepository>();
+            services.AddScoped<IBookService, BookService>();
+
             return services.BuildServiceProvider();
         }
     }

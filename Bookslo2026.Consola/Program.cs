@@ -15,15 +15,16 @@ namespace Bookslo2026.Consola
     {//LIST/ADD/DELETE SUCCESSFULLY FOR PUBLISHER, I UPDATE INCOMPLETELY
         //static IAuthorService _service = new AuthorService();
         static IServiceProvider provider = DependencyInyectionContainer.Configure();
-        
+
         static void Main(string[] args)
         {
 
 
-            using (var scoped=provider.CreateScope())
+            using (var scoped = provider.CreateScope())
             {
                 var service = scoped.ServiceProvider.GetRequiredService<IAuthorService>();
                 var servicePublisher = scoped.ServiceProvider.GetRequiredService<IPublisherService>();
+                var serviceBook = scoped.ServiceProvider.GetRequiredService<IBookService>();
                 do
                 {
                     Console.Clear();
@@ -89,12 +90,58 @@ namespace Bookslo2026.Consola
                                     break;
                             }
                             break;
+                        case "3":
+                            Console.WriteLine("Books");
+                            Console.WriteLine("1. List Books");
+                            Console.WriteLine("2. Add Books");
+                            Console.WriteLine("3. Delete Books");
+                            Console.WriteLine("4. Update Books");
+                            var optionBooks = Console.ReadLine();
+                            switch (optionBooks)
+                            {
+                                case "1":
+                                    ListBooks(serviceBook);
+                                    break;
+                                case "2":
+                                    //AddBook(serviceBook);
+                                    break;
+                                case "3":
+                                    //DeleteBook(serviceBook);
+                                    break;
+                                case "4":
+                                    //UpdateBook(serviceBook);
+                                    break;
+
+                                case "0":
+                                    return;
+                                default:
+                                    break;
+                            }
+                            break;
                         case "0":
                             return;
-                        default:
-                            break;
+                        default: break;
                     }
-                } while (true); 
+                    break;
+                } while (true);
+            }
+        }
+
+        private static void ListBooks(IBookService serviceBook)
+        {
+            Console.Clear();
+            Console.WriteLine("Books List");
+            ShowBook(serviceBook);
+            Console.WriteLine("Press any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void ShowBook(IBookService serviceBook)
+        {
+            var books = serviceBook.GetAll();
+            foreach (var book in books)
+            {
+                Console.WriteLine($"ID: {book.BookId} Title: {book.Title} Author: {book.AuthorId} Publisher: {book.PublisherId} Published Date: {book.PublishedDate.ToShortDateString()} Price: {book.Price}");
             }
         }
 
