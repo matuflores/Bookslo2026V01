@@ -12,15 +12,15 @@ namespace Bookslo2026.Service.Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IAuthorsRepository? _repository;
+        //private readonly IAuthorsRepository? _repository;
         private readonly IValidator<Author> _validator;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _uow;
 
-        public AuthorService(IAuthorsRepository repository,IValidator<Author> validator, IUnitOfWork unitOfWork)
+        public AuthorService(IValidator<Author> validator, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            //_repository = repository;
             _validator = validator;
-            _unitOfWork = unitOfWork;
+            _uow = unitOfWork;
             //_repository = new AuthorRepository();
             //_validator = new AuthorValidator();
         }
@@ -38,12 +38,12 @@ namespace Bookslo2026.Service.Services
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
                 return (false, errors);
             }// SI LA VALIDACION NO FUE VALIDADA, DEVOLVEMOS LOS ERRORES DE VALIDACION AL USUARIO
-            if (!_repository.Exist(author.FirstName, author.LastName))
+            if (!_uow.Authors.Exist(author.FirstName, author.LastName))
             {
                 try
                 {
-                    _repository.Add(author);
-                    _unitOfWork.Save();
+                    _uow.Authors.Add(author);
+                    _uow.Save();
                     return (true, new List<string>());
                 }
                 catch (Exception)
@@ -62,8 +62,8 @@ namespace Bookslo2026.Service.Services
 
             try
             {
-                _repository.Delete(id);
-                _unitOfWork.Save();//esto lo pongo para que se guarden los cambios en la base de datos, ya que el repository solo hace el cambio en memoria, pero no lo guarda en la base de datos, por eso necesito el unit of work para guardar los cambios en la base de datos
+                _uow.Authors.Delete(id);
+                _uow.Save();//esto lo pongo para que se guarden los cambios en la base de datos, ya que el repository solo hace el cambio en memoria, pero no lo guarda en la base de datos, por eso necesito el unit of work para guardar los cambios en la base de datos
                 return (true, new List<string>());
             }
             catch (Exception)
@@ -74,7 +74,7 @@ namespace Bookslo2026.Service.Services
 
         public List<AuthorListDto> GetAll()
         {
-            return _repository.GetAll()
+            return _uow.Authors.GetAll()
                 .Select(a => AuthorMapper
                 .ToAuthorListDto(a))
                 .ToList();//transformamos la lista de autores a una lista de AuthorListDto, que es lo que queremos mostrar al usuario
@@ -82,7 +82,7 @@ namespace Bookslo2026.Service.Services
 
         public AuthorDetailsDto? GetById(int id)
         {
-            var author = _repository.GetById(id);
+            var author = _uow.Authors.GetById(id);
             if (author == null) return null;
             return AuthorMapper.ToAuthorDetailsDto(author);
             //return new AuthorDetailsDto
@@ -95,7 +95,7 @@ namespace Bookslo2026.Service.Services
 
         public AuthorUpdateDto? GetForUpdate(int id)
         {
-            var author = _repository.GetById(id);
+            var author = _uow.Authors.GetById(id);
             if (author == null) return null;
             return AuthorMapper.ToAuthorUpdateDto(author);
             //return new AuthorUpdateDto
@@ -109,7 +109,7 @@ namespace Bookslo2026.Service.Services
         public (bool Success, List<string> Errors) Update(AuthorUpdateDto authorDto)
         {
             //var author = AuthorMapper.toEntity(authorDto);
-            Author? author=_repository.GetById(authorDto.AuthorId);
+            Author? author=_uow.Authors.GetById(authorDto.AuthorId);
             if (author == null)
             {
                 return (false, new List<string>() { "Author Not Found!" });
@@ -131,12 +131,12 @@ namespace Bookslo2026.Service.Services
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
                 return (false, errors);
             }
-            if (!_repository.Exist(author.FirstName, author.LastName, author.AuthorId))
+            if (!_uow.Authors.Exist(author.FirstName, author.LastName, author.AuthorId))
             {
                 try
                 {
                     //_repository.Update(author);
-                    _unitOfWork.Save();
+                    _uow.Save();
                     return (true, new List<string>());
                 }
                 catch (Exception)

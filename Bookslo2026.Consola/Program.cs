@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Bookslo2026.Consola
 {
     internal class Program
-    {//LIST/ADD/DELETE SUCCESSFULLY FOR PUBLISHER, I UPDATE INCOMPLETELY
+    {
         //static IAuthorService _service = new AuthorService();
         static IServiceProvider provider = DependencyInyectionContainer.Configure();
 

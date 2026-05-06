@@ -9,7 +9,7 @@ namespace Bookslo2026.Service.Services
 {
     public class PublisherService : IPublisherService
     {
-
+        //PRUEBA DE PULL
         private readonly IPublishersRepository? _repository;
         private readonly IUnitOfWork _unitOfWork;
 
